@@ -105,7 +105,7 @@ void clean_newline(char *str) {
     str[strcspn(str, "\n")] = 0;
 }
 
-void log_action(char *district, char *user, char *action)
+void log_action(char *district, char *user, char *action, char *role, int id)
 {
     char path[MAX];
     snprintf(path, MAX, "%s/logged_district", district);
@@ -113,7 +113,7 @@ void log_action(char *district, char *user, char *action)
     if (fd < 0) return;
 
     char buffer[128];
-    snprintf(buffer, sizeof(buffer), "%s %s\n", user, action);
+    snprintf(buffer, sizeof(buffer), "ID %d: %s - %s - %s\n", id, user, role, action);
     write(fd, buffer, strlen(buffer));
     close(fd);
 }
@@ -151,7 +151,7 @@ void add_report(Options opt) {
     write(fd, &r, sizeof(Report));
     close(fd);
 
-    log_action(opt.district, opt.user, "ADD");
+    log_action(opt.district, opt.user, "add", opt.role, r.id);
 }
 
 void list_reports(Options opt) {
