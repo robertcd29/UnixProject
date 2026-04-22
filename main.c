@@ -185,5 +185,8 @@ int main(int argc, char **argv)
         remove_district(opt.district);
     else
         printf("Unknown command\n");
+
+
+        //TEST GIT
     return 0;
 }
