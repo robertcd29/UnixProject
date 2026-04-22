@@ -77,7 +77,6 @@ void create_district(char *name) {
     chmod(path, 0644);
 
     char linkname[MAX];
-    snprintf(linkname, MAX, "active_reports-%s", name);
 
     snprintf(path, MAX, "%s/reports.dat", name);
     symlink(path, linkname);
@@ -186,6 +185,5 @@ int main(int argc, char **argv)
         remove_district(opt.district);
     else
         printf("Unknown command\n");
-
     return 0;
 }
