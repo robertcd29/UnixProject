@@ -1,0 +1,22 @@
+ID 1: alice - manager - add
+ID 1: alice - manager - monitor notified
+ID 2: alice - manager - add
+ID 2: alice - manager - monitor notified
+ID 3: alice - manager - add
+ID 3: alice - manager - monitor notified
+ID 4: alice - manager - add
+ID 4: alice - manager - monitor could not be notified
+ID 5: alice - manager - add
+ID 5: alice - manager - monitor notified
+ID 6: alice - manager - add
+ID 6: alice - manager - monitor notified
+ID 7: alice - manager - add
+ID 7: alice - manager - monitor notified
+ID 8: alice - manager - add
+ID 8: alice - manager - monitor could not be notified
+ID 9: alice - manager - add
+ID 9: alice - manager - monitor could not be notified
+ID 10: alice - manager - add
+ID 10: alice - manager - monitor notified
+ID 11: alice - manager - add
+ID 11: alice - manager - monitor notified
