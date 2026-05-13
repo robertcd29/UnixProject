@@ -22,6 +22,24 @@ static void handle_sigint(int sig) {
 }
 
 int main(void) {
+    int check_fd = open(PID_FILE, O_RDONLY);
+    if(check_fd >= 0)
+    {
+        char exist[64];
+        ssize_t n = read(check_fd, exist, sizeof(exist) - 1);
+        close(check_fd);
+        if(n > 0)
+        {
+            exist[n] = '\0';
+            pid_t existing_pid = (pid_t)atoi(exist);
+            if(existing_pid > 0 && kill(existing_pid, 0) == 0)
+            {
+                printf("Existing pid %d\n", existing_pid);
+                return 0;
+            }
+        }
+    }
+
     int fd = open(PID_FILE, O_CREAT | O_WRONLY | O_TRUNC, 0644);
     if (fd < 0) {
         perror("open .monitor_pid");
@@ -40,8 +58,6 @@ int main(void) {
 
     memset(&sa_usr1, 0, sizeof(sa_usr1));
     sa_usr1.sa_handler = handle_sigusr1;
-    sigemptyset(&sa_usr1.sa_mask);
-    sa_usr1.sa_flags = SA_RESTART;
     if (sigaction(SIGUSR1, &sa_usr1, NULL) < 0) {
         perror("sigusr");
         unlink(PID_FILE);
@@ -50,8 +66,6 @@ int main(void) {
 
     memset(&sa_int, 0, sizeof(sa_int));
     sa_int.sa_handler = handle_sigint;
-    sigemptyset(&sa_int.sa_mask);
-    sa_int.sa_flags = 0;
     if (sigaction(SIGINT, &sa_int, NULL) < 0) {
         perror("sigint");
         unlink(PID_FILE);
