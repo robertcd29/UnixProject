@@ -77,7 +77,7 @@ void create_district(char *name) {
     chmod(path, 0644);
 
     char linkname[MAX];
-
+    snprintf(linkname, MAX, "active_reports-%s", name);
     snprintf(path, MAX, "%s/reports.dat", name);
     symlink(path, linkname);
 }
