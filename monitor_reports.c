@@ -6,33 +6,31 @@
 #include <signal.h>
 
 #define PID_FILE ".monitor_pid"
-
+ //functii pentru semnale
 static void handle_sigusr1(int sig) {
-    (void)sig;
     const char *msg = "new report added\n";
     write(STDOUT_FILENO, msg, strlen(msg));
 }
 
 static void handle_sigint(int sig) {
-    (void)sig;
     const char *msg = "shutting down\n";
     write(STDOUT_FILENO, msg, strlen(msg));
     unlink(PID_FILE);
-    _exit(0);
+    exit(0);
 }
 
 int main(void) {
     int check_fd = open(PID_FILE, O_RDONLY);
-    if(check_fd >= 0)
+    if(check_fd >= 0) //verificam daca e deja deschis
     {
         char exist[64];
-        ssize_t n = read(check_fd, exist, sizeof(exist) - 1);
+        ssize_t n = read(check_fd, exist, sizeof(exist) - 1); //citim continutul
         close(check_fd);
         if(n > 0)
         {
             exist[n] = '\0';
-            pid_t existing_pid = (pid_t)atoi(exist);
-            if(existing_pid > 0 && kill(existing_pid, 0) == 0)
+            pid_t existing_pid = (pid_t)atoi(exist); //continutul este defapt pid ul actual
+            if(existing_pid > 0 && kill(existing_pid, 0) == 0) //verificam daca procesul ruleaza deja prin kill cu semnalul 0
             {
                 printf("Existing pid %d\n", existing_pid);
                 return 0;
@@ -47,7 +45,7 @@ int main(void) {
     }
 
     char pid_str[32];
-    snprintf(pid_str, sizeof(pid_str), "%d\n", (int)getpid());
+    snprintf(pid_str, sizeof(pid_str), "%d\n", (int)getpid()); //luam pidul procesului si l scriem in fisier
     write(fd, pid_str, strlen(pid_str));
     close(fd);
 
@@ -56,16 +54,14 @@ int main(void) {
 
     struct sigaction sa_usr1, sa_int;
 
-    memset(&sa_usr1, 0, sizeof(sa_usr1));
-    sa_usr1.sa_handler = handle_sigusr1;
+    sa_usr1.sa_handler = handle_sigusr1; //setam handlerul pentru functia de mai sus
     if (sigaction(SIGUSR1, &sa_usr1, NULL) < 0) {
         perror("sigusr");
         unlink(PID_FILE);
         return 1;
     }
 
-    memset(&sa_int, 0, sizeof(sa_int));
-    sa_int.sa_handler = handle_sigint;
+    sa_int.sa_handler = handle_sigint; //sigint este pentru atunci cand oprim programul
     if (sigaction(SIGINT, &sa_int, NULL) < 0) {
         perror("sigint");
         unlink(PID_FILE);
@@ -73,9 +69,9 @@ int main(void) {
     }
 
     while (1) {
-        pause();
+        pause();//asteptam urmatorul semnal
     }
 
-    unlink(PID_FILE);
+    unlink(PID_FILE); //la final inchidem programul
     return 0;
 }

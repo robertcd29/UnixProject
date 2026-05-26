@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
         printf("  (no reports)\n");
     } else {
         for (int i = 0; i < num_inspectors; i++) {
-            printf("  Inspector: %-20s  Reports: %2d  Workload Score: %d\n",
+            printf("  Inspector: %-20s  Reports: %2d  Workload Score: %d\n", //-20s ocupa 20 de caractere si se aliniaza la stanga
                    scores[i].inspector,
                    scores[i].report_count,
                    scores[i].total_severity);
